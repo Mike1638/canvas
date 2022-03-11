@@ -14,32 +14,67 @@
         }
 
         #canvas {
-            height: 100vh;
-            border: 1px solid red;
+            /* height: 100vh;
+            width: 100vw; */
+            outline: 1px solid red;
+            display: block;
         }
     </style>
 </head>
 
 <body>
-    <div id="canvas"></div>
+    <canvas id="canvas"></canvas>
     <script>
-        canvas.onclick = (e) => {
-            console.log(e);
-            console.log(e.clientX,
-                e.clientY);
-            let div = document.createElement('div');
-            div.style.position = "absolute";
-            div.style.left = e.clientX + "px";
-            div.style.top = e.clientY + "px";
-            // div.style.border = "1px solid red";
-            div.style.width = "6px";
-            div.style.height = "6px";
-            div.style.marginLeft = "-3px";
-            div.style.marginTop = "-3px";
-            div.style.borderRadius = '50%';
-            div.style.background = 'black';
-            canvas.appendChild(div);
-        };
+        // 通过操作dom来画点，因为是跨线程的，所以性能不好有延迟。
+        // canvas.onmousemove = (e) => {
+        //     console.log(e);
+        //     console.log(e.clientX,
+        //         e.clientY);
+        //     let div = document.createElement('div');
+        //     div.style.position = "absolute";
+        //     div.style.left = e.clientX + "px";
+        //     div.style.top = e.clientY + "px";
+        //     // div.style.border = "1px solid red";
+        //     div.style.width = "6px";
+        //     div.style.height = "6px";
+        //     div.style.marginLeft = "-3px";
+        //     div.style.marginTop = "-3px";
+        //     div.style.borderRadius = '50%';
+        //     div.style.background = 'black';
+        //     canvas.appendChild(div);
+        // };
+        var canvas = document.getElementById('canvas');
+        let documentWidth = document.documentElement.clientWidth;
+        let documentHeight = document.documentElement.clientHeight;
+        console.log(documentWidth, documentHeight);
+        canvas.width = documentWidth;
+        canvas.height = documentHeight;
+        const ctx = canvas.getContext('2d');
+        let x = false;
+        canvas.onmousedown = () => {
+            x = true;
+            console.log("down" + x);
+        }
+        canvas.onmouseup = () => {
+            x = false;
+            console.log("up" + x);
+        }
+        ctx.fillStyle = 'black';
+
+
+        canvas.onmousemove = (e) => {
+            if (x === true) {
+                console.log(e.clientX, e.clientY);
+
+                // ctx.fillRect(e.clientX - 5, e.clientY - 5, 10, 10);
+
+                ctx.beginPath();
+                ctx.arc(e.clientX, e.clientY, 10, 0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.strokeStyle = 'none';
+                ctx.fill();
+            }
+        }
     </script>
 </body>
 
